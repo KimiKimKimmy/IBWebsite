@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block content %}
+	<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Resource Name</th>
+        <th>Download</th>
+        {% if current_user.level=="admin" %}
+            <th>Delete</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+    	{% for resource in resources %}
+    		<tr>
+        	<td>{{ resource.title }}</td>
+        	<td><a href="{{ url_for('return_files', destination=resource.resource) }}"><button>Download</button></a><br></td>
+            {% if current_user.level=="admin" %}
+                <td><form action="{{ url_for('delete_resource', destination=resource.resource) }}" style: >
+                    <input type="image" src="{{ url_for('static', filename='all_icons/' + 'trash.png') }}" width="30" height="30">
+                </form></td>
+            {% endif %}
+        	<tr>
+        {% endfor %}
+    </tbody>
+    <h1>Some useful Resources</h1>
+    <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+            <tr>
+            <td>The IB Diploma Website</td>
+            <td><a href="https://www.ibo.org/programmes/diploma-programme/">https://www.ibo.org/programmes/diploma-programme/</a></td>
+            <tr>
+            <tr>
+            <td>General Regulations</td>
+            <td><a href="https://www.ibo.org/globalassets/publications/become-an-ib-school/dp-general-regulations-en.pdf">https://www.ibo.org/globalassets/publications/become-an-ib-school/dp-general-regulations-en.pdf</a></td>
+            <tr>
+            <tr>
+            <td>CAS Projects</td>
+            <td><a href="https://www.ibo.org/programmes/diploma-programme/curriculum/creativity-activity-and-service/cas-projects/">https://www.ibo.org/programmes/diploma-programme/curriculum/creativity-activity-and-service/cas-projects/</a></td>
+            <tr>
+            <tr>
+            <td>Internal Assessments</td>
+            <td><a href="https://www.ibo.org/programmes/diploma-programme/assessment-and-exams/">https://www.ibo.org/programmes/diploma-programme/assessment-and-exams/</a></td>
+            <tr>
+    </tbody>
+    {% if current_user.level=="admin" %}
+        <form action="{{ url_for('upload_resources') }}">
+            <input type="image" src="{{ url_for('static', filename='all_icons/' + 'plus.png') }}" width="48" height="48">
+        </form>
+    {% endif %}
+{% endblock content %}

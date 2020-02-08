@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block content %}
+	<form style="border-bottom: 6px solid green; background-color: lightgrey">
+		<img src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" style="margin-top: 10px; margin-left: 10px" class="rounded-circle article-img">
+		<h1 style="border-bottom: solid black">{{ user.username }}<h1>
+		<h1 style="border-bottom: solid black; margin-bottom: 20px">{{ user.email }}</h1>
+	</form>
+{% endblock content %}

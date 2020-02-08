@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+	{% for post in posts.items %}
+        <article class="media content-section" style="border-bottom: 1px solid #e3e3e3">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" style="margin-bottom: 5px; margin-top: 5px">
+          <div>
+            <div>
+              <a href="{{ url_for('student_page', username=post.author.username) }}" style="margin-left: 10px">{{ post.author.username }}</a>
+              <small>{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2 style="margin-left: 10px"><a href="{{ url_for('event', post_id=post.id) }}">{{ post.title }}</a></h2>
+            {% if post.tldr %}
+            <p style="margin-left: 10px">{{ post.tldr }}</p>
+            {% else %}
+            <p style="margin-left: 10px">No summary was provided, click in to see what's up!</p>
+            {% endif %}
+          </div>
+        </article>
+    {% endfor %}
+	{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+		{% if page_num %}
+			<a class="btn btn-info" href="{{ url_for('news', page=page_num) }}" style="margin-top:20px">{{ page_num }}</a>
+		{% else %}
+		...
+		{% endif %}
+	{% endfor %}
+  {% if current_user.level=="admin" %}
+    <form action="{{ url_for('new_event') }}" style="margin-left: 1050px; margin-bottom: 200px; position: relative">
+        <input type="image" src="{{ url_for('static', filename='all_icons/' + 'plus.png') }}" width="80" height="80">
+    </form>
+  {% endif %}
+{% endblock content %}

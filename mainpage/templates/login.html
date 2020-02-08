@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div>
+		<form method="POST" action="" style="border: solid black">
+			{{ form.hidden_tag() }}
+			<fieldset>
+				<legend style="margin-left: 10px">Log In</legend>
+				<div style="margin-left: 10px">
+					{{ form.email.label() }}
+					{% if form.email.errors %}
+						{{ form.email() }}
+						<div>
+							{% for error in form.email.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.email() }}
+					{% endif %}
+				</div>
+				<div style="margin-left: 10px">
+					{{ form.password.label() }}
+					{% if form.password.errors %}
+						{{ form.password() }}
+						<div>
+							{% for error in form.password.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.password() }}
+					{% endif %}
+				</div>
+				<div style="margin-left: 10px">
+					{{ form.remember() }}
+					{{ form.remember.label() }}
+				</div>
+			</fieldset>
+			<div style="margin-left: 10px">
+				{{ form.submit() }}
+			</div>
+			<small style="margin-left: 10px; margin-bottom: 10px">
+				<a href="{{ url_for('reset_request') }}">Forgot Password?</a>
+			</small>
+		</form>
+	</div>
+	<div>
+		Need an Account?
+		<a href="{{ url_for('register') }}">Sign Up Now</a>
+	</div>
+{% endblock content %}

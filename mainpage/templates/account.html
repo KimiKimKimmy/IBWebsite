@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+	<form style="border-bottom: 6px solid green; background-color: lightgrey">
+		<img src="{{ image_file }}" style="margin-top: 10px; margin-left: 10px" class="rounded-circle article-img">
+		<h1 style="border-bottom: solid black">{{ current_user.username }}<h1>
+		<h1 style="border-bottom: solid black; margin-bottom: 20px">{{ current_user.email }}</h1>
+	</form>
+	<div>
+		<form method="POST" action="", enctype="multipart/form-data", style="border: solid black; margin-top: 50px">
+			{{ form.hidden_tag() }}
+			<fieldset>
+				<legend style="margin-left: 10px">Account Information</legend>
+				<div style="margin-left: 10px">
+					{{ form.username.label() }}
+					{% if form.username.errors %}
+						{{ form.username() }}
+						<div>
+							{% for error in form.username.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.username() }}
+					{% endif %}
+				</div>
+				<div style="margin-left: 10px">
+					{{ form.picture.label() }}
+					{{ form.picture() }}
+					{% if form.picture.errors %}
+						{% for error in form.picture.errors %}
+								<span>{{ error }}</span></br>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</fieldset>
+			<div style="margin-left: 10px; margin-bottom: 10px">
+				{{ form.submit() }}
+			</div>
+		</form>
+	</div>
+{% endblock content %}

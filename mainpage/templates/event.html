@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block content %}
+	<form style="border-bottom: 6px solid green; background-color: lightgrey">  
+		<img style="margin-top: 10px; margin-left: 10px; margin-bottom: 10px " src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" class="rounded-circle article-img">
+		<a href="{{ url_for('student_page', username=post.author.username) }}">{{ post.author.username }}</a>
+		{{ post.date_posted.strftime('%Y-%m-%d') }}</br>
+	</form>
+	<form style="border:solid black; margin-top: 20px; margin-bottom: 20px">
+		<h2 style="margin-left: 10px; margin-top: 10px">Title: {{ post.title }} </h2>
+		{% if post.author == current_user %}
+			<a href="{{ url_for('update_event', post_id=post.id) }}" style="margin-left: 10px" target="_blank" class="btn btn-primary">Update</a>
+		{% endif %}
+		{% if post.author == current_user or current_user.level=="admin" %}
+			<a href="{{ url_for('delete_event', post_id=post.id) }}" style="margin-left: 10px" class="btn btn-danger">Delete</a>
+		{% endif %}</br>
+		<p style="word-wrap: break-word; margin-left: 10px; margin-top: 20px">{{ post.content }}</p></br>
+	</form>
+	<h3>Comments</h3>
+	{% for comment in comments %} 
+		<form style="border-bottom: solid black 0.5px; margin-top: 10px; margin-bottom: 10px">
+			<a href="{{ url_for('student_page', username=comment.commenter.username) }}">{{ comment.commenter.username }}</a>
+			{{ comment.date_posted.strftime('%Y-%m-%d') }} </br>
+			{{ comment.content }} </br>
+		</form>
+	{% endfor %}
+	{% if current_user.is_authenticated %}
+		<div>
+			<form method="POST" action="" style="margin-bottom: 20px" >
+				{{ form.hidden_tag() }}
+				<fieldset>
+					<legend>Say something interesting!</legend>
+					<div>
+						{% if form.content.errors %}
+							{{ form.content() }}
+							<div>
+								{% for error in form.content.errors %}
+									<span>{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.content() }}
+						{% endif %}
+					</div>
+				</fieldset>
+				<div>
+					{{ form.submit() }}
+				</div>
+			</form>
+		</div>
+	{% else %}
+		<p>Log in to make a comment!</p>
+	{% endif %}
+{% endblock content %}
