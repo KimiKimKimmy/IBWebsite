@@ -14,14 +14,27 @@
 			<a href="{{ url_for('delete_event', post_id=post.id) }}" style="margin-left: 10px" class="btn btn-danger">Delete</a>
 		{% endif %}</br>
 		<p style="word-wrap: break-word; margin-left: 10px; margin-top: 20px">{{ post.content }}</p></br>
+		{% if post.picture %}
+			<img style="margin-top: 10px; margin-left: 10px; margin-bottom: 10px " src="{{ url_for('static', filename='post_image/' + post.picture) }}">
+		{% endif %}
 	</form>
 	<h3>Comments</h3>
 	{% for comment in comments %} 
-		<form style="border-bottom: solid black 0.5px; margin-top: 10px; margin-bottom: 10px">
-			<a href="{{ url_for('student_page', username=comment.commenter.username) }}">{{ comment.commenter.username }}</a>
-			{{ comment.date_posted.strftime('%Y-%m-%d') }} </br>
-			{{ comment.content }} </br>
-		</form>
+		<div>
+			<form style="margin-top: 10px; margin-bottom: 10px; float: left">
+				<a href="{{ url_for('student_page', username=comment.commenter.username) }}">{{ comment.commenter.username }}</a>
+				{{ comment.date_posted.strftime('%Y-%m-%d') }}</br>
+				{{ comment.content }} </br>
+			</form>
+			{% if comment.commenter == current_user %}
+			<form action="{{ url_for('delete_comment', comment_id=comment.id) }}" style="float:right">
+				<input type="image" src="{{ url_for('static', filename='all_icons/' + 'trash.png') }}" width="50" height="50">
+	        </form></br>
+			{% endif %}
+	        </br>
+	        </br>
+	        <hr>
+		</div>
 	{% endfor %}
 	{% if current_user.is_authenticated %}
 		<div>

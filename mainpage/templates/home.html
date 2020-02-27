@@ -1,4 +1,32 @@
 {% extends "layout.html" %}
 {% block content %}
-	<h1>Home Page<h1>
+	<h1 style="border-bottom: solid black 0.5px">Recent News</h1></br>
+	{% for post in posts.items %}
+        <article class="media content-section" style="border-bottom: 1px solid #e3e3e3">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" style="margin-bottom: 5px; margin-top: 5px">
+          <div>
+            <div>
+              <a href="{{ url_for('student_page', username=post.author.username) }}" style="margin-left: 10px">{{ post.author.username }}</a>
+              <small>{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2 style="margin-left: 10px"><a href="{{ url_for('event', post_id=post.id) }}">{{ post.title }}</a></h2>
+            {% if post.tldr %}
+            <p style="margin-left: 10px">{{ post.tldr }}</p>
+            {% else %}
+            <p style="margin-left: 10px">No summary was provided, click in to see what's up!</p>
+            {% endif %}
+          </div>
+        </article>
+    {% endfor %}
+    <img src="{{ url_for('static', filename='all_icons/' + 'Home-1.png') }}" width=100% margin-left=auto margin-right=auto style="margin-bottom: 100px; margin-top: 100px"></br>
+    <h1 style="border-bottom: solid black 0.5px">Staff</h1></br>
+    <article class="media content-section" style="border-bottom: 1px solid #e3e3e3">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='all_icons/' + 'MrsRoley.jpg') }}" style="margin-bottom: 5px">
+        <div>
+        	<h2 style="margin-left: 20px">Mid-Pacific IB/AP Program Coordinator</h2>
+            <div>
+            	<a style="margin-left: 20px" href="mailto:kroley@midpac.edu">email: kroley@midpac.edu</a>
+            </div>
+		</div>
+    </article>
 {% endblock content %}

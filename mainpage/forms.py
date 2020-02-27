@@ -43,6 +43,7 @@ class EventForm(FlaskForm):
 	title = StringField('Title', validators=[DataRequired()])
 	content = TextAreaField('Content', validators=[DataRequired()])
 	tldr = TextAreaField('TL;DR')
+	picture = FileField('Attached Image', validators=[FileAllowed(['jpg', 'png', 'img'])])
 	submit = SubmitField('Publish')
 
 class CommentForm(FlaskForm):

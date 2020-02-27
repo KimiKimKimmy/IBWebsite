@@ -27,6 +27,17 @@ def save_resource(form_resource):
 	form_resource.save(resource_path)
 	return resource_fn
 
+def save_image(form_picture):
+	random_hex = secrets.token_hex(8)
+	_, f_ext = os.path.splitext(form_picture.filename)
+	image_fn = random_hex + f_ext
+	image_path = os.path.join(app.root_path, 'static/post_image', image_fn)
+	output_size = (500, 500)
+	i = Image.open(form_picture)
+	i.thumbnail(output_size)
+	i.save(image_path)
+	return image_fn
+
 def send_reset_email(user):
 	token = user.get_reset_token()
 	msg = Message('Password Reset Request', sender='imsb5678@gmail.com', recipients=[user.email])
@@ -35,7 +46,9 @@ def send_reset_email(user):
 
 @app.route('/')
 def home():
-	return render_template('home.html', title="Home Page")
+	page = request.args.get('page', 1, type=int)
+	posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+	return render_template('home.html', title="Home Page", posts=posts)
 
 @app.route('/about')
 def about():
@@ -112,10 +125,17 @@ def logout():
 def new_event():
 	form = EventForm()
 	if form.validate_on_submit():
-		if form.tldr.data:
-			post = Post(title=form.title.data, content=form.content.data, author=current_user, tldr=form.tldr.data)
+		if form.picture.data:
+			post_image = save_image(form.picture.data)
+			if form.tldr.data:
+				post = Post(title=form.title.data, content=form.content.data, author=current_user, tldr=form.tldr.data, picture=post_image)
+			else:
+				post = Post(title=form.title.data, content=form.content.data, author=current_user, picture=post_image)
 		else:
-			post = Post(title=form.title.data, content=form.content.data, author=current_user)
+			if form.tldr.data:
+				post = Post(title=form.title.data, content=form.content.data, author=current_user, tldr=form.tldr.data)
+			else:
+				post = Post(title=form.title.data, content=form.content.data, author=current_user)
 		db.session.add(post)
 		db.session.commit()
 		return redirect(url_for('news'))
@@ -157,6 +177,8 @@ def delete_event(post_id):
 	post = Post.query.get_or_404(post_id)
 	if post.author != current_user:
 		abort(403)
+	old_picture = os.path.join(app.root_path, 'static/post_image', post.picture)
+	os.remove(old_picture)
 	comments = Comment.query.filter_by(post_id=post.id)
 	for comment in comments:
 		db.session.delete(comment)
@@ -164,6 +186,16 @@ def delete_event(post_id):
 	db.session.commit()
 	flash('The Event has been deleted.')
 	return redirect(url_for('news'))
+
+@app.route('/comment/<comment_id>/delete', methods=['GET', 'POST'])
+@login_required
+def delete_comment(comment_id):
+	comment = Comment.query.get_or_404(comment_id)
+	post = Post.query.get_or_404(comment.post_id)
+	db.session.delete(comment)
+	db.session.commit()
+	flash('The Comment has been deleted.')
+	return redirect(url_for('event', post_id=post.id))
 
 @app.route('/upload_resources', methods=['GET', 'POST'])
 @login_required
@@ -191,6 +223,8 @@ def return_files(destination):
 @login_required
 def delete_resource(destination):
 	resource = Resource.query.filter_by(resource=destination).first()
+	old_resource = os.path.join(app.root_path, 'static/resources', resource.resource)
+	os.remove(old_resource)
 	db.session.delete(resource)
 	db.session.commit()
 	flash('The File has been deleted.')

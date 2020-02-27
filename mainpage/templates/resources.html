@@ -16,7 +16,7 @@
         	<td>{{ resource.title }}</td>
         	<td><a href="{{ url_for('return_files', destination=resource.resource) }}"><button>Download</button></a><br></td>
             {% if current_user.level=="admin" %}
-                <td><form action="{{ url_for('delete_resource', destination=resource.resource) }}" style: >
+                <td><form action="{{ url_for('delete_resource', destination=resource.resource) }}">
                     <input type="image" src="{{ url_for('static', filename='all_icons/' + 'trash.png') }}" width="30" height="30">
                 </form></td>
             {% endif %}
@@ -48,6 +48,10 @@
             <td>Internal Assessments</td>
             <td><a href="https://www.ibo.org/programmes/diploma-programme/assessment-and-exams/">https://www.ibo.org/programmes/diploma-programme/assessment-and-exams/</a></td>
             <tr>
+            <tr>
+            <td>Extended Essay</td>
+            <td><a href="https://www.ibo.org/programmes/diploma-programme/curriculum/extended-essay/">https://www.ibo.org/programmes/diploma-programme/curriculum/extended-essay/</a></td>
+            <tr> 
     </tbody>
     {% if current_user.level=="admin" %}
         <form action="{{ url_for('upload_resources') }}">

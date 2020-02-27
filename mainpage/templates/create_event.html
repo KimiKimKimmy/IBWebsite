@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 	<div >
-		<form method="POST" action="" style="border: solid black">
+		<form method="POST" action="" enctype="multipart/form-data" style="border: solid black">
 			{{ form.hidden_tag() }}
 			<fieldset >
 				<legend style="margin-left: 10px">{{ legend }}</legend>
@@ -42,6 +42,19 @@
 						</div>
 					{% else %}
 						{{ form.content() }}
+					{% endif %}
+				</div>
+				<div style="margin-left: 10px">
+					{{ form.picture.label() }}
+					{% if form.picture.errors %}
+						{{ form.picture() }}
+						<div>
+							{% for error in form.picture.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.picture() }}
 					{% endif %}
 				</div>
 			</fieldset>
