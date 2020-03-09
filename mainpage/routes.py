@@ -177,8 +177,9 @@ def delete_event(post_id):
 	post = Post.query.get_or_404(post_id)
 	if post.author != current_user:
 		abort(403)
-	old_picture = os.path.join(app.root_path, 'static/post_image', post.picture)
-	os.remove(old_picture)
+	if post.picture:
+		old_picture = os.path.join(app.root_path, 'static/post_image', post.picture)
+		os.remove(old_picture)
 	comments = Comment.query.filter_by(post_id=post.id)
 	for comment in comments:
 		db.session.delete(comment)
